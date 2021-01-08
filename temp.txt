@@ -1,0 +1,6 @@
+Check if time is stored as date time, if not convert
+New columns: Month, Year, Duration
+Check how many unique trips users take on average, to see if user selection is a valid metric
+Find Effective way to encode city data (38638 unique cities)
+Use same method on aff id
+
