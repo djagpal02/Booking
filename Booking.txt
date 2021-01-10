@@ -1,0 +1,92 @@
+
+import pandas as pd 
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+%matplotlib inline
+
+df = pd.read_csv('booking_train_set.csv')
+
+df.drop(['index'],axis=1,inplace = True);
+
+df.head()
+
+df.info()
+
+df.nunique()
+
+(1048575 - 181231*4)/4
+
+
+
+# Convert to dateimte
+
+df['checkin'] = df['checkin'].apply(lambda x: pd.to_datetime(x))
+df['checkout'] = df['checkout'].apply(lambda x: pd.to_datetime(x))
+
+# Get Month
+
+df['Month'] = df['checkin'].apply(lambda x: x.month)
+
+# Get Duration
+
+df['Duration'] = df['checkout'] - df['checkin']
+df['Duration'] = df['Duration'].apply(lambda x: x.days)
+
+# Get Labels for Cities
+
+df["city_id"] = df["city_id"].astype('category')
+df["cityLabel"] = df["city_id"].cat.codes
+
+# Get Labels for Deices
+
+df["device_class"] = df["device_class"].astype('category')
+df["deviceLabel"] = df["device_class"].cat.codes
+
+# Get Labels for affiliate id
+
+df["affiliate_id"] = df["affiliate_id"].astype('category')
+df["affiliateLabel"] = df["affiliate_id"].cat.codes
+
+# Get Labels for Booker Country
+
+df["booker_country"] = df["booker_country"].astype('category')
+df["bookerCountryLabel"] = df["booker_country"].cat.codes
+
+# Get Labels for Hotel Country
+
+df["hotel_country"] = df["hotel_country"].astype('category')
+df["hotelCountryLabel"] = df["hotel_country"].cat.codes
+
+df.head()
+
+type(df['Duration'][0])
+
+dfnumerical = df[['Month', 'Duration', 'cityLabel', 'deviceLabel', 'affiliateLabel', 'bookerCountryLabel', 'hotelCountryLabel']]
+
+sns.heatmap(dfnumerical.corr())
+
+X = dfnumerical[['Month', 'Duration', 'deviceLabel', 'affiliateLabel', 'bookerCountryLabel', 'hotelCountryLabel']]
+y = dfnumerical['cityLabel']
+
+from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4, random_state=101)
+
+
+
+
+# Decision Tree
+
+from sklearn.tree import DecisionTreeClassifier
+
+dtree = DecisionTreeClassifier()
+
+
+dtree.fit(X_train,y_train)
+
+
+
+
+
+
